@@ -1,0 +1,214 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    /* Brand accents (Design System): AI Blue = primary, Electric Violet = secondary */
+    --primary: 224.3 76.3% 48%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 262.1 83.3% 57.8%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 40% 98%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    /* Accent surfaces ("soft bg") */
+    --accent: 214.3 94.6% 92.7%;
+    --accent-foreground: 224.3 76.3% 48%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 224.3 76.3% 48%;
+
+    /* Radii (shadcn + design tokens) */
+    --radius-sm: 0.5rem;   /* 8px */
+    --radius-md: 0.75rem;  /* 12px */
+    --radius-lg: 1rem;     /* 16px */
+    --radius-xl: 1.25rem;  /* 20px */
+    --radius-card: 1.5rem; /* 24px, primary card radius on home page */
+    --radius-pill: 9999px;
+    --radius: var(--radius-md);
+
+    /* Home-page derived brand surfaces */
+    --brand-dark: 228 17% 5%;            /* #0A0A0E */
+    --brand-dark-soft: 226 59% 7%;       /* #070A1A */
+    --brand-dark-panel: 223 35% 14%;     /* #0B1220 */
+    --brand-deep-blue: 218 73% 17%;      /* #0C234B */
+    --brand-deep-blue-muted: 216 21% 72%;/* #A7B5C8 */
+    --brand-star: 38 92% 51%;            /* #F59E0B */
+    --brand-avatar: 261 54% 23%;         /* #2A1B59 */
+    --brand-avatar-text: 258 100% 80%;   /* #B59BFF */
+    --brand-overlay-strong: 0 0% 0%;
+    --brand-overlay-soft: 0 0% 100%;
+    --brand-glass: 0 0% 100% / 0.35;
+    --brand-glass-strong: 0 0% 100% / 0.6;
+    --brand-glass-border: 0 0% 100% / 0.4;
+    --brand-glass-border-soft: 0 0% 100% / 0.1;
+
+    /* Effect tokens from home components */
+    --blur-glass: 12px;
+    --blur-glass-strong: 24px;
+    --blur-glow: 110px;
+    --blur-glow-lg: 140px;
+    --shadow-glass: 0 10px 24px rgba(2, 6, 23, 0.08);
+    --shadow-glass-soft: 0 4px 16px rgba(2, 6, 23, 0.06);
+    --shadow-glass-dark: 0 18px 40px -28px rgba(0, 0, 0, 0.9);
+    --shadow-glow: 0 10px 30px rgba(124, 58, 237, 0.35);
+
+    /* Legacy aliases aligned to the same palette */
+    --navy: 222.2 47.4% 11.2%;
+    --blue: 224.3 76.3% 48%;
+    --blue-light: 214.3 94.6% 92.7%;
+    --gray-light: 210 40% 98%;
+
+    /* Semantic extras (prepared for future use) */
+    --primary-soft: 214.3 94.6% 92.7%;   /* #DBEAFE */
+    --secondary-soft: 251.4 91.3% 95.5%; /* #EDE9FE */
+    --success: 83.7 80.5% 44.3%;         /* #84CC16 */
+    --success-soft: 79.6 89.1% 89.2%;    /* #ECFCCB */
+
+    /* Sidebar (neutral, keeps the system clean in Light Mode) */
+    --sidebar-background: 210 40% 98%;
+    --sidebar-foreground: 222.2 47.4% 11.2%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 214.3 94.6% 92.7%;
+    --sidebar-accent-foreground: 222.2 47.4% 11.2%;
+    --sidebar-border: 214.3 31.8% 91.4%;
+    --sidebar-ring: 224.3 76.3% 48%;
+  }
+
+  .dark {
+    /* Future-ready Dark Mode tokens (site still defaults to Light) */
+    --background: 228.6 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 47.4% 11.2%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 47.4% 11.2%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Preview-tuned AI Blue */
+    --primary: 223.8 100% 62.9%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 262.1 83.3% 57.8%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 217.2 32.6% 17.5%;
+    /* Preview-tuned muted foreground */
+    --muted-foreground: 214.3 30.4% 72.9%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+
+    --radius-sm: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.25rem;
+    --radius-card: 1.5rem;
+    --radius-pill: 9999px;
+    --radius: var(--radius-md);
+
+    --brand-dark: 228.6 84% 4.9%;
+    --brand-dark-soft: 228.6 84% 4.9%;
+    --brand-dark-panel: 222.2 47.4% 11.2%;
+    --brand-deep-blue: 223.8 100% 16%;
+    --brand-deep-blue-muted: 214.3 30.4% 72.9%;
+    --brand-star: 38 92% 51%;
+    --brand-avatar: 261 54% 23%;
+    --brand-avatar-text: 258 100% 80%;
+    --brand-overlay-strong: 0 0% 0%;
+    --brand-overlay-soft: 0 0% 100%;
+    --brand-glass: 217.2 32.6% 17.5% / 0.35;
+    --brand-glass-strong: 217.2 32.6% 17.5% / 0.6;
+    --brand-glass-border: 210 40% 98% / 0.35;
+    --brand-glass-border-soft: 210 40% 98% / 0.15;
+
+    --blur-glass: 12px;
+    --blur-glass-strong: 24px;
+    --blur-glow: 110px;
+    --blur-glow-lg: 140px;
+    --shadow-glass: 0 10px 24px rgba(0, 0, 0, 0.35);
+    --shadow-glass-soft: 0 4px 16px rgba(0, 0, 0, 0.3);
+    --shadow-glass-dark: 0 18px 40px -28px rgba(0, 0, 0, 0.9);
+    --shadow-glow: 0 10px 30px rgba(124, 58, 237, 0.35);
+
+    --navy: 210 40% 98%;
+    --blue: 224.3 76.3% 48%;
+    --blue-light: 217.2 32.6% 17.5%;
+    --gray-light: 217.2 32.6% 17.5%;
+
+    --primary-soft: 217.2 32.6% 17.5%;
+    --secondary-soft: 217.2 32.6% 17.5%;
+    --success: 83.7 80.5% 44.3%;
+    --success-soft: 83.7 80.5% 12%;
+
+    --sidebar-background: 222.2 47.4% 11.2%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217.2 32.6% 17.5%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217.2 32.6% 17.5%;
+    --sidebar-ring: 224.3 76.3% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-onest;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-onest font-bold text-primary;
+  }
+}
+
+@layer utilities {
+  @keyframes ai-float {
+    0% { transform: translate3d(-50%, -50%, 0) scale(1); }
+    50% { transform: translate3d(-50%, calc(-50% - 14px), 0) scale(1.02); }
+    100% { transform: translate3d(-50%, -50%, 0) scale(1); }
+  }
+
+  @keyframes ai-drift {
+    0% { transform: translate3d(-50%, -50%, 0) rotate(0deg); }
+    50% { transform: translate3d(calc(-50% + 10px), calc(-50% - 8px), 0) rotate(3deg); }
+    100% { transform: translate3d(-50%, -50%, 0) rotate(0deg); }
+  }
+
+  .animate-ai-float {
+    animation: ai-float 18s ease-in-out infinite;
+  }
+
+  .animate-ai-drift {
+    animation: ai-drift 24s ease-in-out infinite;
+  }
+}
