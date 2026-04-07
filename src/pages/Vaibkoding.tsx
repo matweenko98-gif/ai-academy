@@ -1,7 +1,9 @@
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import TeachersSection from "@/components/home/TeachersSection";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/lib/supabase";
 import {
   Accordion,
   AccordionContent,
@@ -10,6 +12,8 @@ import {
 } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
 import {
   ArrowRight,
   Award,
@@ -97,9 +101,25 @@ const faqs = [
 export default function Vaibkoding() {
   const [formData, setFormData] = useState({ name: "", phone: "", email: "", goal: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    const { error } = await supabase.from("leads").insert({
+      name: formData.name,
+      phone: formData.phone,
+      email: formData.email,
+      goal: formData.goal,
+      source: "course_vaibkoding",
+    });
+    setLoading(false);
+    if (error) {
+      alert("Ошибка при отправке заявки. Попробуйте ещё раз.");
+      return;
+    }
+    alert("Заявка успешно отправлена!");
+    setFormData({ name: "", phone: "", email: "", goal: "" });
     setSubmitted(true);
   };
 
@@ -435,85 +455,8 @@ export default function Vaibkoding() {
           </div>
         </section>
 
-        {/* Teacher */}
-        <section className="relative overflow-hidden py-20 md:py-24">
-          <div className="pointer-events-none absolute inset-0 -z-10">
-            <div className="absolute -top-28 left-10 h-80 w-80 rounded-full bg-secondary/18 blur-glow opacity-50" />
-            <div className="absolute -bottom-28 right-10 h-80 w-80 rounded-full bg-primary/18 blur-glow opacity-50" />
-          </div>
-
-          <div className="container max-w-5xl">
-            <div className="mx-auto max-w-3xl text-center">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Преподаватель</p>
-              <h2 className="mt-3 text-3xl md:text-5xl font-extrabold leading-tight tracking-tight text-foreground">
-                Ведёт практик, который строит продукты с AI
-              </h2>
-              <p className="mt-4 text-base md:text-lg text-muted-foreground leading-relaxed">
-                Вы получаете не “лекции”, а рабочие приёмы, которые можно использовать сразу.
-              </p>
-            </div>
-
-            <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-12">
-              <div className="rounded-card border border-border/60 bg-white/70 p-7 shadow-glass backdrop-blur-glass-strong transition-all duration-300 hover:-translate-y-1 hover:shadow-glass lg:col-span-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="grid h-12 w-12 place-items-center rounded-full border border-brand-glass-border bg-gradient-to-br from-secondary/25 to-primary/20 backdrop-blur-glass">
-                    <User className="h-6 w-6 text-secondary" />
-                  </div>
-                  <span className="inline-flex items-center rounded-pill bg-secondary/10 px-3 py-1 text-xs font-semibold text-secondary">
-                    Практика на проектах
-                  </span>
-                </div>
-                <h3 className="mt-5 text-lg font-bold text-foreground">Евгений Гнедчик</h3>
-                <p className="mt-1 text-sm font-semibold text-secondary">Full‑Stack / AI‑Builder</p>
-                <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                  Помогает доводить продукт до релиза: структура, UI‑логика, данные, интеграции и публикация.
-                </p>
-                <div className="mt-6 grid grid-cols-2 gap-3">
-                  {[
-                    { icon: Cpu, label: "AI‑workflows" },
-                    { icon: Monitor, label: "Web‑MVP" },
-                    { icon: Workflow, label: "Автоматизация" },
-                    { icon: Rocket, label: "Запуск" },
-                  ].map((x) => (
-                    <div
-                      key={x.label}
-                      className="flex items-center gap-2 rounded-md border border-border/60 bg-background/80 px-4 py-3 backdrop-blur-glass"
-                    >
-                      <x.icon className="h-4 w-4 text-secondary" />
-                      <span className="text-xs font-semibold text-foreground/80">{x.label}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="rounded-card border border-border/60 bg-white/70 p-7 shadow-glass backdrop-blur-glass-strong transition-all duration-300 hover:-translate-y-1 hover:shadow-glass lg:col-span-7 md:p-8">
-                <p className="text-lg font-bold text-foreground">Как проходит разбор</p>
-                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-                  На каждом этапе — понятные критерии качества и быстрые правки. Вы видите, что улучшить, и как это сделать.
-                </p>
-                <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                  {[
-                    { title: "Шаблоны", text: "Готовые промпты и структуры, которые экономят часы.", icon: Sparkles },
-                    { title: "Чек‑листы", text: "Проверка качества: UI, логика, тексты, ошибки.", icon: CheckCircle2 },
-                    { title: "Фидбек", text: "Точные правки и рекомендации, без “в общем неплохо”.", icon: Users },
-                    { title: "Релиз", text: "Деплой и упаковка результата под портфолио.", icon: Rocket },
-                  ].map((x) => (
-                    <div
-                      key={x.title}
-                      className="rounded-md border border-border/60 bg-background/80 p-5 shadow-glass-soft backdrop-blur-glass transition-all duration-300 hover:-translate-y-1 hover:shadow-glass"
-                    >
-                      <div className="grid h-10 w-10 place-items-center rounded-full border border-brand-glass-border bg-gradient-to-br from-secondary/25 to-primary/20 backdrop-blur-glass">
-                        <x.icon className="h-5 w-5 text-secondary" />
-                      </div>
-                      <p className="mt-4 text-sm font-bold text-foreground">{x.title}</p>
-                      <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{x.text}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Teachers */}
+        <TeachersSection />
 
         {/* Reviews */}
         <section className="relative overflow-hidden bg-[#0F172A] py-24 text-white md:py-32">
@@ -548,10 +491,10 @@ export default function Vaibkoding() {
                       Вайбкодинг
                     </span>
                     <div className="flex gap-1">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-brand-star text-brand-star" />
-                    ))}
-                  </div>
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star key={i} className="h-4 w-4 fill-brand-star text-brand-star" />
+                      ))}
+                    </div>
                   </div>
                   <p className="mb-4 text-sm leading-relaxed text-slate-400">«{r.text}»</p>
                   <div className="flex items-center gap-3 border-t border-white/10 pt-4">
@@ -687,13 +630,14 @@ export default function Vaibkoding() {
                     className="h-12 border-border/70 bg-background/85"
                     required
                   />
-                  <Input
+                  <PhoneInput
+                    defaultCountry="ru"
                     value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    placeholder="Телефон"
-                    className="h-12 border-border/70 bg-background/85"
-                    type="tel"
-                    required
+                    onChange={(phone) => setFormData({ ...formData, phone })}
+                    inputClassName="!h-12 !w-full !rounded-md !border-border/70 !bg-background/85 !text-sm !shadow-sm placeholder:!text-muted-foreground focus:!outline-none focus:!ring-1 focus:!ring-ring"
+                    countrySelectorStyleProps={{
+                      buttonClassName: "!h-12 !rounded-l-md !border-border/70 !bg-background/85 !px-3 !shadow-sm",
+                    }}
                   />
                   <Input
                     value={formData.email}
@@ -725,9 +669,10 @@ export default function Vaibkoding() {
                   <div className="md:col-span-2 pt-1">
                     <Button
                       type="submit"
+                      disabled={loading}
                       className="h-12 w-full rounded-md bg-secondary text-base font-semibold text-secondary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:bg-secondary/90 hover:shadow-xl"
                     >
-                      Записаться на курс <ArrowRight className="ml-2 h-4 w-4" />
+                      {loading ? "Отправка..." : (<>Записаться на курс <ArrowRight className="ml-2 h-4 w-4" /></>)}
                     </Button>
                     <p className="mt-2 text-xs text-muted-foreground">
                       Мы используем контакты только для связи по вашему запросу.

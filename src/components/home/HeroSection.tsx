@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
 
 export default function HeroSection() {
   const courseOptions = useMemo(
@@ -11,6 +14,7 @@ export default function HeroSection() {
   );
 
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -85,8 +89,23 @@ export default function HeroSection() {
               ) : (
                 <form
                   className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-3"
-                  onSubmit={(e) => {
+                  onSubmit={async (e) => {
                     e.preventDefault();
+                    setLoading(true);
+                    const { error } = await supabase.from("leads").insert({
+                      name: form.name,
+                      phone: form.phone,
+                      email: form.email,
+                      course: form.course,
+                      source: "hero_main_page",
+                    });
+                    setLoading(false);
+                    if (error) {
+                      alert("Ошибка при отправке заявки. Попробуйте ещё раз.");
+                      return;
+                    }
+                    alert("Заявка успешно отправлена!");
+                    setForm({ name: "", phone: "", email: "", course: "" });
                     setSubmitted(true);
                   }}
                 >
@@ -97,13 +116,14 @@ export default function HeroSection() {
                     className="h-12 bg-white/70 border-white/40 focus-visible:ring-2 focus-visible:ring-ring"
                     required
                   />
-                  <Input
+                  <PhoneInput
+                    defaultCountry="ru"
                     value={form.phone}
-                    onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))}
-                    placeholder="Телефон"
-                    className="h-12 bg-white/70 border-white/40"
-                    type="tel"
-                    required
+                    onChange={(phone) => setForm((p) => ({ ...p, phone }))}
+                    inputClassName="!h-12 !w-full !rounded-md !border-white/40 !bg-white/70 !text-sm !shadow-sm placeholder:!text-muted-foreground focus:!outline-none focus:!ring-1 focus:!ring-ring"
+                    countrySelectorStyleProps={{
+                      buttonClassName: "!h-12 !rounded-l-md !border-white/40 !bg-white/70 !px-3 !shadow-sm",
+                    }}
                   />
                   <Input
                     value={form.email}
@@ -130,9 +150,10 @@ export default function HeroSection() {
                   <div className="md:col-span-2 pt-1">
                     <Button
                       type="submit"
+                      disabled={loading}
                       className="h-12 w-full rounded-[var(--radius-md)] bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-all hover:shadow-xl hover:-translate-y-0.5"
                     >
-                      Оставить заявку <ArrowRight className="ml-2 h-4 w-4" />
+                      {loading ? "Отправка..." : (<>Оставить заявку <ArrowRight className="ml-2 h-4 w-4" /></>)}
                     </Button>
                     <p className="mt-2 text-xs text-muted-foreground">
                       Нажимая «Оставить заявку», вы соглашаетесь на обработку данных для связи.

@@ -3,14 +3,32 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Mail, Phone, Sparkles } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
 
 export default function ContactSection() {
   const [form, setForm] = useState({ name: "", phone: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Connect to Supabase
+    setLoading(true);
+    const { error } = await supabase.from("leads").insert({
+      name: form.name,
+      phone: form.phone,
+      email: form.email,
+      message: form.message,
+      source: "contact_main_page",
+    });
+    setLoading(false);
+    if (error) {
+      alert("Ошибка при отправке заявки. Попробуйте ещё раз.");
+      return;
+    }
+    alert("Заявка успешно отправлена!");
+    setForm({ name: "", phone: "", email: "", message: "" });
     setSubmitted(true);
   };
 
@@ -89,13 +107,14 @@ export default function ContactSection() {
                   className="h-12 rounded-xl border border-slate-200 bg-white"
                   required
                 />
-                <Input
+                <PhoneInput
+                  defaultCountry="ru"
                   value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  placeholder="Телефон"
-                  className="h-12 rounded-xl border border-slate-200 bg-white"
-                  type="tel"
-                  required
+                  onChange={(phone) => setForm({ ...form, phone })}
+                  inputClassName="!h-12 !w-full !rounded-xl !border !border-slate-200 !bg-white !text-sm !shadow-sm placeholder:!text-muted-foreground focus:!outline-none focus:!ring-1 focus:!ring-ring"
+                  countrySelectorStyleProps={{
+                    buttonClassName: "!h-12 !rounded-l-xl !border !border-slate-200 !bg-white !px-3 !shadow-sm",
+                  }}
                 />
                 <Input
                   value={form.email}
@@ -116,9 +135,10 @@ export default function ContactSection() {
               <div className="mt-4">
                 <Button
                   type="submit"
+                  disabled={loading}
                   className="h-12 w-full rounded-[var(--radius-md)] bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-all hover:-translate-y-0.5 hover:shadow-xl text-base font-semibold"
                 >
-                  Отправить заявку
+                  {loading ? "Отправка..." : "Отправить заявку"}
                 </Button>
                 <p className="mt-2 text-xs text-muted-foreground">
                   Мы используем контакты только для связи по вашему запросу.

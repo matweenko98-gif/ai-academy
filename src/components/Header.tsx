@@ -2,6 +2,16 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
 
 const navLinks = [
   { label: "Курсы", href: "/kursy" },
@@ -13,7 +23,21 @@ const navLinks = [
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const [formData, setFormData] = useState({ name: "", phone: "" });
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const location = useLocation();
+
+  const handleOpenSignup = () => {
+    setIsSignupOpen(true);
+    setIsSubmitted(false);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitted(true);
+    setFormData({ name: "", phone: "" });
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/60 backdrop-blur-xl border-b border-white/40 shadow-sm">
@@ -47,7 +71,11 @@ export default function Header() {
             <Phone className="w-4 h-4" />
             +7 (495) 123-45-67
           </a>
-          <Button size="sm" className="bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-lg px-5 font-semibold">
+          <Button
+            size="sm"
+            className="bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-lg px-5 font-semibold"
+            onClick={handleOpenSignup}
+          >
             Записаться
           </Button>
         </div>
@@ -82,12 +110,55 @@ export default function Header() {
               <Phone className="w-4 h-4" />
               +7 (495) 123-45-67
             </a>
-            <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-lg font-semibold mt-2">
+            <Button
+              className="bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-lg font-semibold mt-2"
+              onClick={() => {
+                setMobileOpen(false);
+                handleOpenSignup();
+              }}
+            >
               Записаться
             </Button>
           </nav>
         </div>
       )}
+
+      <Dialog open={isSignupOpen} onOpenChange={setIsSignupOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Записаться на обучение</DialogTitle>
+            <DialogDescription>
+              Оставьте минимальные данные, и мы свяжемся с вами.
+            </DialogDescription>
+          </DialogHeader>
+          {isSubmitted ? (
+            <div className="rounded-lg border border-border bg-muted/40 px-4 py-3 text-sm text-foreground">
+              Заявка отправлена. Скоро вам перезвоним.
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <Input
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="Ваше имя"
+                required
+              />
+              <PhoneInput
+                defaultCountry="ru"
+                value={formData.phone}
+                onChange={(phone) => setFormData({ ...formData, phone })}
+                inputClassName="!h-9 !w-full !rounded-md !border-input !bg-transparent !text-sm !shadow-sm !ring-offset-background placeholder:!text-muted-foreground focus:!outline-none focus:!ring-1 focus:!ring-ring"
+                countrySelectorStyleProps={{
+                  buttonClassName: "!h-9 !rounded-l-md !border-input !bg-transparent !px-3 !shadow-sm",
+                }}
+              />
+              <Button type="submit" className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90">
+                Отправить
+              </Button>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
     </header>
   );
 }
